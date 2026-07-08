@@ -1,5 +1,4 @@
 @page "/spells"
-@using Blazorise.LoadingIndicator
 @using HarryPotter.Client.Core.Models
 @using HarryPotter.Client.Core.Services
 @inject HarryPotterService HarryPotterService
@@ -12,7 +11,7 @@
 
 <h4><b>Your goal</b></h4>
 
-<ol>    
+<ol>
     <li>Create a spell model with the properties you need.</li>
     <li>Add the server-side endpoint flow for spells.</li>
     <li>Add the client-side service method for spells.</li>
@@ -42,10 +41,9 @@
         <FieldLabel ColumnSize="ColumnSize.Is1">Name:</FieldLabel>
         <FieldBody ColumnSize="ColumnSize.Is4">
             <input class="form-control"
-            placeholder = "Search"
+                   placeholder="Search"
                    @bind="SpellSearchText"
-           @bind:event="oninput"  />
-
+                   @bind:event="oninput" />
         </FieldBody>
     </Field>
 </div>
@@ -80,29 +78,29 @@
     <li>You can explain the flow from page -> client service -> controller -> server service -> HP API.</li>
 </ul>
 
-@{
-    <style scoped>
-        .search-field {
-            padding: 10px;
-        }
+<style scoped>
+    .search-field {
+        padding: 10px;
+    }
 
-        .spells-table {
-            margin-top: 10px;
-        }
-    </style>
-}
+    .spells-table {
+        margin-top: 10px;
+    }
+</style>
+
 @code {
-    private List<Spell> Spells = new();
+    private List<Spell> SpellList = new();
     private string SpellSearchText = string.Empty;
+
     protected override async Task OnInitializedAsync()
     {
-        Spells = await HarryPotterService.GetSpellsAsync();
+        SpellList = await HarryPotterService.GetSpellsAsync();
     }
-    private IEnumerable<Spell> FilteredSpells => 
-    Spells.Where(spell =>
-        string.IsNullOrWhiteSpace(SpellSearchText) 
-        || spell.Name.Contains(
-            SpellSearchText,
-            StringComparison.OrdinalIgnoreCase) ?? false);
-     
+
+    private IEnumerable<Spell> FilteredSpells =>
+        SpellList.Where(spell =>
+            string.IsNullOrWhiteSpace(SpellSearchText) ||
+            (spell.Name?.Contains(
+                SpellSearchText,
+                StringComparison.OrdinalIgnoreCase) ?? false));
 }
