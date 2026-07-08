@@ -2,7 +2,6 @@
 @using Blazorise.LoadingIndicator
 @using HarryPotter.Client.Core.Models
 @using HarryPotter.Client.Core.Services
-
 @inject HarryPotterService HarryPotterService
 
 <h1><b>Spells Challenge</b></h1>
@@ -13,7 +12,7 @@
 
 <h4><b>Your goal</b></h4>
 
-<ol>
+<ol>    
     <li>Create a spell model with the properties you need.</li>
     <li>Add the server-side endpoint flow for spells.</li>
     <li>Add the client-side service method for spells.</li>
@@ -42,7 +41,11 @@
     <Field Horizontal>
         <FieldLabel ColumnSize="ColumnSize.Is1">Name:</FieldLabel>
         <FieldBody ColumnSize="ColumnSize.Is4">
-            <input class="form-control" placeholder="Wire this up once your spells are loading" disabled />
+            <input class="form-control"
+            placeholder = "Search"
+                   @bind="SpellSearchText"
+           @bind:event="oninput"  />
+
         </FieldBody>
     </Field>
 </div>
@@ -55,6 +58,14 @@
         </tr>
     </thead>
     <tbody>
+        @foreach (Spell spell in FilteredSpells)
+        {
+            <tr>
+                <td>@spell.Name</td>
+                <td>@spell.Description</td>
+            </tr>
+        }
+        )
         <tr>
             <td colspan="2">Your spell data will appear here once you finish the feature.</td>
         </tr>
@@ -79,4 +90,19 @@
             margin-top: 10px;
         }
     </style>
+}
+@code {
+    private List<Spell> Spells = new();
+    private string SpellSearchText = string.Empty;
+    protected override async Task OnInitializedAsync()
+    {
+        Spells = await HarryPotterService.GetSpellsAsync();
+    }
+    private IEnumerable<Spell> FilteredSpells => 
+    Spells.Where(spell =>
+        string.IsNullOrWhiteSpace(SpellSearchText) 
+        || spell.Name.Contains(
+            SpellSearchText,
+            StringComparison.OrdinalIgnoreCase) ?? false);
+     
 }
