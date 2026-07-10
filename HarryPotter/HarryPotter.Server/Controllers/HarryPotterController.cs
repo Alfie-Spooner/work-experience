@@ -27,5 +27,12 @@ namespace HarryPotter.Server.Controllers
             List<Models.Spell> spells = await _harryPotterService.GetSpellsAsync();
             return Ok(spells);
         }
+
+        [HttpGet("staff")]
+        public async Task<IActionResult> GetStaff()
+        {
+            List<Models.Character> staff = await _harryPotterService.GetStaffAsync();
+            return Ok(staff);
+        }
     }
 }

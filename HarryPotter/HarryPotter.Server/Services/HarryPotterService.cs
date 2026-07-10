@@ -35,6 +35,18 @@ namespace HarryPotter.Server.Services
 
             return spells ?? new List<Spell>();
         }
+
+        public async Task<List<Character>> GetStaffAsync()
+        {
+            HttpResponseMessage response = await _httpClient.GetAsync("characters/staff");
+            response.EnsureSuccessStatusCode();
+
+            string json = await response.Content.ReadAsStringAsync();
+
+            List<Character>? staff = JsonSerializer.Deserialize<List<Character>>(json);
+
+            return staff ?? new List<Character>();
+        }
     }
 }
 
